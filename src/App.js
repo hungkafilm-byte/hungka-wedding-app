@@ -1,71 +1,68 @@
 import React, { useState } from 'react';
-import { Trash2, CheckCircle, Plus } from 'lucide-react';
 
-const HungkaWeddingApp = () => {
-  const [notes, setNotes] = useState([]);
-  const [inputValue, setInputValue] = useState('');
+const App = () => {
+  const [currentDate, setCurrentDate] = useState(new Date());
 
-  const addNote = () => {
-    if (inputValue.trim()) {
-      setNotes([...notes, { id: Date.now(), text: inputValue, completed: false }]);
-      setInputValue('');
-    }
-  };
-
-  const toggleComplete = (id) => {
-    setNotes(notes.map(note => 
-      note.id === id ? { ...note, completed: !note.completed } : note
-    ));
-  };
-
-  const deleteNote = (id) => {
-    setNotes(notes.filter(note => note.id !== id));
-  };
-
+  // Giao diện Lịch giả lập (giống hình bạn gửi)
   return (
-    <div className="min-h-screen bg-gray-50 p-8 font-sans">
-      <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
-        <div className="bg-pink-600 p-6 text-white text-center">
-          <h1 className="text-2xl font-bold tracking-wider">HUNGKA WEDDING</h1>
-          <p className="text-sm opacity-80">Quản lý công việc sự kiện</p>
+    <div className="min-h-screen bg-[#121212] text-white font-sans flex flex-col">
+      {/* Header */}
+      <div className="p-4 border-b border-gray-800">
+        <p className="text-gray-400 text-sm">Xin chào, Quản lý</p>
+        <div className="flex justify-between items-center">
+          <h1 className="text-[#FFD700] text-2xl font-bold tracking-wider">HUNGKA WEDDING</h1>
+          <button className="bg-gray-700 p-2 rounded-full">🔄</button>
         </div>
+      </div>
 
-        <div className="p-6">
-          <div className="flex gap-2 mb-6">
-            <input 
-              type="text" 
-              className="flex-1 border-b-2 border-gray-200 focus:border-pink-500 outline-none px-2 py-1"
-              placeholder="Thêm việc cần làm..."
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && addNote()}
-            />
-            <button onClick={addNote} className="bg-pink-500 text-white p-2 rounded-full hover:bg-pink-600 transition">
-              <Plus size={20} />
-            </button>
-          </div>
+      {/* Điều hướng Tháng */}
+      <div className="p-4 flex justify-between items-center">
+        <button className="bg-gray-800 px-4 py-2 rounded-lg text-sm">Lọc</button>
+        <h2 className="text-lg font-semibold">Tháng {currentDate.getMonth() + 1} Năm {currentDate.getFullYear()}</h2>
+        <div className="flex gap-2">
+          <button className="bg-gray-800 px-3 py-1 rounded">&lt;</button>
+          <button className="bg-gray-800 px-3 py-1 rounded">&gt;</button>
+        </div>
+      </div>
 
-          <div className="space-y-3">
-            {notes.map(note => (
-              <div key={note.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg group">
-                <div className="flex items-center gap-3">
-                  <button onClick={() => toggleComplete(note.id)}>
-                    <CheckCircle className={note.completed ? "text-green-500" : "text-gray-300"} />
-                  </button>
-                  <span className={`${note.completed ? "line-through text-gray-400" : "text-gray-700"}`}>
-                    {note.text}
-                  </span>
-                </div>
-                <button onClick={() => deleteNote(note.id)} className="text-red-400 opacity-0 group-hover:opacity-100 transition">
-                  <Trash2 size={18} />
-                </button>
-              </div>
-            ))}
-          </div>
+      {/* Bảng Lịch */}
+      <div className="px-2 flex-grow">
+        <div className="grid grid-cols-7 text-center text-xs font-bold mb-2">
+          {['Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7', 'CN'].map(day => (
+            <div key={day} className="py-2">{day}</div>
+          ))}
+        </div>
+        
+        {/* Lưới ngày (Mẫu 1 vài ngày như hình) */}
+        <div className="grid grid-cols-7 gap-1">
+          {[...Array(28)].map((_, i) => (
+            <div key={i} className="aspect-square border border-gray-900 bg-[#1e1e1e] p-1 flex flex-col justify-between items-center relative">
+              <span className="text-sm font-bold">{i + 1}</span>
+              <span className="text-[10px] text-red-500 font-medium">{i + 14}/12</span>
+              {i === 24 || i === 27 ? <div className="w-1.5 h-1.5 bg-green-500 rounded-full mb-1"></div> : null}
+              {i === 25 ? <div className="w-5 h-5 bg-green-600 rounded-full text-[10px] flex items-center justify-center mb-1">3</div> : null}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Menu dưới (Tab Bar) */}
+      <div className="bg-[#1e1e1e] border-t border-gray-800 flex justify-around py-3">
+        <div className="flex flex-col items-center text-[#FFD700]">
+          <span className="text-xl">📅</span>
+          <span className="text-[10px]">Lịch</span>
+        </div>
+        <div className="flex flex-col items-center text-gray-500">
+          <span className="text-xl">🔍</span>
+          <span className="text-[10px]">Tìm kiếm</span>
+        </div>
+        <div className="flex flex-col items-center text-gray-500">
+          <span className="text-xl">📈</span>
+          <span className="text-[10px]">Thống kê</span>
         </div>
       </div>
     </div>
   );
 };
 
-export default HungkaWeddingApp;
+export default App;
